@@ -10,12 +10,11 @@ const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://vandyand:u2LAPxFaYkzysmso@cluster0-thvmu.mongodb.net/tvdemodb?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-
-app.use(bodyParser.json())
 app.use(cors())
+app.use(bodyParser.json())
 
 app.get('/lists', (req, res) => {
-    console.log('get called!')
+    console.log('get lists called!')
     client.connect(err => {
         if(err) res.send(err)
         client.db('tododb')
@@ -27,7 +26,7 @@ app.get('/lists', (req, res) => {
 })
 
 app.get('/items', (req, res) => {
-    console.log('get called!')
+    console.log('get items called!')
     client.connect(err => {
         if(err) res.send(err)
         client.db('tododb')
@@ -38,8 +37,8 @@ app.get('/items', (req, res) => {
     })
 })
 
-app.post('/lists',(req, res) => {
-    console.log('post called!')
+app.post('/lists', (req, res) => {
+    console.log('post list called!')
     client.connect(err => {
         if(err) res.send(err)
         client.db('tododb')
@@ -50,13 +49,38 @@ app.post('/lists',(req, res) => {
     })
 })
 
-app.post('/items',(req, res) => {
-    console.log('post called!')
+app.post('/items', (req, res) => {
+    console.log('post item called!')
     client.connect(err => {
         if(err) res.send(err)
         client.db('tododb')
         .collection('todoitems')
         .insertOne(req.body)
+        .then(r => res.send(r.ops))
+        .catch(err => console.log(err))
+    })
+})
+
+app.delete('/lists',(req,res) => {
+    console.log('delete list called!')
+    client.connect(err => {
+        if(err) res.send(err)
+        client.db('tododb')
+        .collection('todolists')
+        .deleteOne(req.body)
+        .then(r => res.send(r.ops))
+        .catch(err => console.log(err))
+    })
+})
+
+
+app.delete('/items',(req,res) => {
+    console.log('delete list called!')
+    client.connect(err => {
+        if(err) res.send(err)
+        client.db('tododb')
+        .collection('todoitems')
+        .deleteOne(req.body)
         .then(r => res.send(r.ops))
         .catch(err => console.log(err))
     })
