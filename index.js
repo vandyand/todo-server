@@ -39,6 +39,11 @@ app.get('/items', (req, res) => {
 
 app.post('/lists', (req, res) => {
     console.log('post list called!')
+    if(Object.keys(req.body).length == 0){
+        res.send("Recieved empty body. Please include body with POST request.")
+        console.log('POST request body is empty. Cannot process request.')
+        return
+    }
     client.connect(err => {
         if(err) res.send(err)
         client.db('tododb')
@@ -51,6 +56,11 @@ app.post('/lists', (req, res) => {
 
 app.post('/items', (req, res) => {
     console.log('post item called!')
+    if(Object.keys(req.body).length == 0){
+        res.send("Recieved empty body. Please include body with POST request.")
+        console.log('POST request body is empty. Cannot process request.')
+        return
+    }
     client.connect(err => {
         if(err) res.send(err)
         client.db('tododb')
@@ -61,20 +71,29 @@ app.post('/items', (req, res) => {
     })
 })
 
-app.delete('/lists',(req,res) => {
+app.delete('/lists/',(req,res) => {
     console.log('delete list called!')
+    // console.log('id param: ', req.params.id)
     client.connect(err => {
         if(err) res.send(err)
         client.db('tododb')
         .collection('todolists')
-        .deleteOne(req.body)
+        .deleteOne({ _id: MongoDb.ObjectId(req.body._id) })
+        .then(r => res.send(r.ops))
+        .catch(err => console.log(err))
+    })
+    client.connect(err => {
+        if(err) res.send(err)
+        client.db('tododb')
+        .collection('todolists')
+        .deleteMany({list_id:req.body._id})
         .then(r => res.send(r.ops))
         .catch(err => console.log(err))
     })
 })
 
 
-app.delete('/items',(req,res) => {
+app.delete('/items/:id',(req,res) => {
     console.log('delete list called!')
     client.connect(err => {
         if(err) res.send(err)
