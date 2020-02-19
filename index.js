@@ -16,6 +16,8 @@ const itemCollectionName = 'todoitems'
 
 app.use(cors())
 app.use(bodyParser.json())
+// app.use(bodyParser.urlencoded({ extended: false }))
+
 
 app.get('/lists', (req, res) => {
     console.log('get lists called!')
@@ -77,6 +79,7 @@ app.post('/items', (req, res) => {
 
 app.put('/lists/', (req, res) => {
     console.log('put list called!')
+    console.log('req.body:', req.body)
 
     const query = { _id: MongoDb.ObjectId(req.body._id) }
     const update = {
@@ -88,11 +91,14 @@ app.put('/lists/', (req, res) => {
     const options = {
         returnNewDocument: true
     }
+    console.log("query: ",query)
+    console.log("update: ",update)
+    console.log("options: ",options)
     client.connect(err => {
         if (err) res.send(err)
         client.db(dbName)
             .collection(listCollectionName)
-            .findOneAndUpdate(query, update, options)
+            .updateOne(query, update, options)
             .then(r => res.send(r.ops))
             .catch(err => console.log(err))
     })
@@ -100,6 +106,7 @@ app.put('/lists/', (req, res) => {
 
 app.put('/items/', (req, res) => {
     console.log('put items called!')
+    console.log('req.body:', req.body)
 
     const query = { _id: MongoDb.ObjectId(req.body._id) }
     const update = {
@@ -112,11 +119,14 @@ app.put('/items/', (req, res) => {
     const options = {
         returnNewDocument: true
     }
+    console.log("query: ",query)
+    console.log("update: ",update)
+    console.log("options: ",options)
     client.connect(err => {
         if (err) res.send(err)
         client.db(dbName)
             .collection(itemCollectionName)
-            .findOneAndUpdate(query, update, options)
+            .updateOne(query, update, options)
             .then(r => res.send(r.ops))
             .catch(err => console.log(err))
     })
