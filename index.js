@@ -18,29 +18,27 @@ app.use(cors())
 app.use(bodyParser.json())
 // app.use(bodyParser.urlencoded({ extended: false }))
 
+client.connect(err => {
+    if (err) console.log(err)
+    else console.log("Client connected!")
+})
 
 app.get('/lists', (req, res) => {
     console.log('get lists called!')
-    client.connect(err => {
-        if (err) res.send(err)
-        client.db(dbName)
-            .collection(listCollectionName)
-            .find().toArray()
-            .then(r => res.send(r))
-            .catch(err => console.log(err))
-    })
+    client.db(dbName)
+        .collection(listCollectionName)
+        .find().toArray()
+        .then(r => res.send(r))
+        .catch(err => console.log(err))
 })
 
 app.get('/items', (req, res) => {
     console.log('get items called!')
-    client.connect(err => {
-        if (err) res.send(err)
-        client.db(dbName)
-            .collection(itemCollectionName)
-            .find().toArray()
-            .then(r => res.send(r))
-            .catch(err => console.log(err))
-    })
+    client.db(dbName)
+        .collection(itemCollectionName)
+        .find().toArray()
+        .then(r => res.send(r))
+        .catch(err => console.log(err))
 })
 
 app.post('/lists', (req, res) => {
@@ -50,14 +48,11 @@ app.post('/lists', (req, res) => {
         console.log('POST request body is empty. Cannot process request.')
         return
     }
-    client.connect(err => {
-        if (err) res.send(err)
-        client.db(dbName)
-            .collection(listCollectionName)
-            .insertOne(req.body)
-            .then(r => res.send(r.ops))
-            .catch(err => console.log(err))
-    })
+    client.db(dbName)
+        .collection(listCollectionName)
+        .insertOne(req.body)
+        .then(r => res.send(r.ops))
+        .catch(err => console.log(err))
 })
 
 app.post('/items', (req, res) => {
@@ -67,14 +62,11 @@ app.post('/items', (req, res) => {
         console.log('POST request body is empty. Cannot process request.')
         return
     }
-    client.connect(err => {
-        if (err) res.send(err)
-        client.db(dbName)
-            .collection(itemCollectionName)
-            .insertOne(req.body)
-            .then(r => res.send(r.ops))
-            .catch(err => console.log(err))
-    })
+    client.db(dbName)
+        .collection(itemCollectionName)
+        .insertOne(req.body)
+        .then(r => res.send(r.ops))
+        .catch(err => console.log(err))
 })
 
 app.put('/lists/', (req, res) => {
@@ -91,17 +83,14 @@ app.put('/lists/', (req, res) => {
     const options = {
         returnNewDocument: true
     }
-    console.log("query: ",query)
-    console.log("update: ",update)
-    console.log("options: ",options)
-    client.connect(err => {
-        if (err) res.send(err)
-        client.db(dbName)
-            .collection(listCollectionName)
-            .updateOne(query, update, options)
-            .then(r => res.send(r.ops))
-            .catch(err => console.log(err))
-    })
+    console.log("query: ", query)
+    console.log("update: ", update)
+    console.log("options: ", options)
+    client.db(dbName)
+        .collection(listCollectionName)
+        .updateOne(query, update, options)
+        .then(r => res.send(r.ops))
+        .catch(err => console.log(err))
 })
 
 app.put('/items/', (req, res) => {
@@ -119,51 +108,39 @@ app.put('/items/', (req, res) => {
     const options = {
         returnNewDocument: true
     }
-    console.log("query: ",query)
-    console.log("update: ",update)
-    console.log("options: ",options)
-    client.connect(err => {
-        if (err) res.send(err)
-        client.db(dbName)
-            .collection(itemCollectionName)
-            .updateOne(query, update, options)
-            .then(r => res.send(r.ops))
-            .catch(err => console.log(err))
-    })
+    console.log("query: ", query)
+    console.log("update: ", update)
+    console.log("options: ", options)
+    client.db(dbName)
+        .collection(itemCollectionName)
+        .updateOne(query, update, options)
+        .then(r => res.send(r.ops))
+        .catch(err => console.log(err))
 })
 
 
 app.delete('/lists/', (req, res) => {
     console.log('delete list called!')
-    client.connect(err => {
-        if (err) res.send(err)
-        client.db(dbName)
-            .collection(listCollectionName)
-            .deleteOne({ _id: MongoDb.ObjectId(req.body._id) })
-            .then(r => res.send(r.ops))
-            .catch(err => console.log(err))
-    })
-    client.connect(err => {
-        if (err) res.send(err)
-        client.db(dbName)
-            .collection(itemCollectionName)
-            .deleteMany({ list_id: req.body._id })
-            .then(r => res.send(r.ops))
-            .catch(err => console.log(err))
-    })
+    client.db(dbName)
+        .collection(listCollectionName)
+        .deleteOne({ _id: MongoDb.ObjectId(req.body._id) })
+        .then(r => res.send(r.ops))
+        .catch(err => console.log(err))
+    client.db(dbName)
+        .collection(itemCollectionName)
+        .deleteMany({ list_id: req.body._id })
+        .then(r => res.send(r.ops))
+        .catch(err => console.log(err))
 })
 
 
 app.delete('/items/', (req, res) => {
-    console.log('delete list called!')
-    client.connect(err => {
-        if (err) res.send(err)
-        client.db(dbName)
-            .collection(itemCollectionName)
-            .deleteOne(req.body)
-            .then(r => res.send(r.ops))
-            .catch(err => console.log(err))
-    })
+    console.log('delete item called!')
+    client.db(dbName)
+        .collection(itemCollectionName)
+        .deleteOne(req.body)
+        .then(r => res.send(r.ops))
+        .catch(err => console.log(err))
 })
 
 
