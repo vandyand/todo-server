@@ -102,7 +102,8 @@ app.put('/items/', (req, res) => {
         "$set": {
             name: req.body.name,
             desc: req.body.desc,
-            due: req.body.due
+            due: req.body.due,
+            isComplete: req.body.isComplete
         }
     }
     const options = {
