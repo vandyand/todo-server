@@ -138,20 +138,21 @@ app.delete('/lists/', (req, res) => {
 
 app.delete('/items/', (req, res) => {
     console.log('delete item called!')
+    console.log('delete item req.body: ',req.body)
     client.db(dbName)
         .collection(itemCollectionName)
-        .deleteOne(req.body)
+        .deleteOne({ _id: MongoDb.ObjectId(req.body._id) })
         .then(r => res.send(r.ops))
         .catch(err => console.log(err))
 })
 
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('./build'))
+// if (process.env.NODE_ENV === 'production') {
+//     app.use(express.static('./build'))
 
-    app.get(*, () => {
-        res.sendFile(path.join(__dirname,'build','index.html'))
-    })
-}
+//     app.get(*, () => {
+//         res.sendFile(path.join(__dirname,'build','index.html'))
+//     })
+// }
 
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}!`))
 
