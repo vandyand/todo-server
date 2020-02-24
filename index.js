@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const path = require('path')
 const cors = require('cors')
 const PORT = process.env.PORT || 4001
 
@@ -144,6 +145,13 @@ app.delete('/items/', (req, res) => {
         .catch(err => console.log(err))
 })
 
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('./build'))
+
+    app.get(*, () => {
+        res.sendFile(path.join(__dirname,'build','index.html'))
+    })
+}
 
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}!`))
 
