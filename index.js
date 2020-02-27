@@ -8,7 +8,8 @@ const PORT = process.env.PORT || 4001
 
 const MongoDb = require('mongodb')
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://vandyand:u2LAPxFaYkzysmso@cluster0-thvmu.mongodb.net/tvdemodb?retryWrites=true&w=majority";
+const dev_uri = "mongodb+srv://vandyand:u2LAPxFaYkzysmso@cluster0-thvmu.mongodb.net/tvdemodb?retryWrites=true&w=majority";
+const uri = process.env.MONGODB_URI || dev_uri;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const dbName = 'tododb'
