@@ -25,6 +25,10 @@ client.connect(err => {
     else console.log("Client connected!")
 })
 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname + '/index.html'));
+})
+
 app.get('/lists', (req, res) => {
     console.log('get lists called!')
     client.db(dbName)
@@ -139,7 +143,7 @@ app.delete('/lists/', (req, res) => {
 
 app.delete('/items/', (req, res) => {
     console.log('delete item called!')
-    console.log('delete item req.body: ',req.body)
+    console.log('delete item req.body: ', req.body)
     client.db(dbName)
         .collection(itemCollectionName)
         .deleteOne({ _id: MongoDb.ObjectId(req.body._id) })
